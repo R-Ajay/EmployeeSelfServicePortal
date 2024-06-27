@@ -1,7 +1,7 @@
 package com.cognizant.backgroundverification.service;
 
-import com.cognizant.backgroundverification.dto.EmployeeVerificationRequest;
 
+import com.cognizant.backgroundverification.dto.EmployeeVerificationRequest;
 
 public interface BackgroundVerificationService {
 

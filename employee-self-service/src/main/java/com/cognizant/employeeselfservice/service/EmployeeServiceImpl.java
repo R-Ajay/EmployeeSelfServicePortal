@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
     private EmployeeRepo employeeRepo;
@@ -29,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getAllEmployee() {
 
-        List<Employee> employees = employeeRepo.findAll();
+      List<Employee> employees = employeeRepo.findAll();
         if(employees == null || employees.isEmpty())
             throw new DataNotFoundException(404, "Oops! No Data is available in db");
 

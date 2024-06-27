@@ -2,10 +2,9 @@ package com.cognizant.employeeselfservice.controller;
 
 import com.cognizant.employeeselfservice.model.Employee;
 import com.cognizant.employeeselfservice.service.EmployeeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(EmployeeController.class)
 class EmployeeControllerTest {
@@ -29,6 +27,7 @@ class EmployeeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
 
     @Test
     @DisplayName("GetEmployeeById_SuccessScenario")
@@ -61,6 +60,83 @@ class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].employeeId").value(expectedEmployees.get(0).getEmployeeId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].employeeId").value(expectedEmployees.get(1).getEmployeeId()))
                 .andReturn();
+    }
+
+    @Test
+    @DisplayName("UpdateEmployee_SuccessScenario")
+    void updateEmployeeSuccess() throws Exception {
+        String employeeId = "18789";
+        Employee employeeToUpdate = getEmployee();
+        String expectedResponse = "Employee updated successfully";
+
+        when(employeeService.updateEmployee(anyString(), any(Employee.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/employee/{employeeId}", employeeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(employeeToUpdate)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+    }
+
+    @Test
+    @DisplayName("UpdateEmployee_FailureScenario")
+    void updateEmployeeFailure() throws Exception {
+        String employeeId = "18789";
+        Employee employeeToUpdate = getEmployee();
+        String expectedResponse = "Employee not found";
+
+        when(employeeService.updateEmployee(anyString(), any(Employee.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/employee/{employeeId}", employeeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(employeeToUpdate)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+    }
+    //Create a test case for addEmployeeSuccess
+    @Test
+    @DisplayName("AddEmployee_SuccessScenario")
+    void addEmployeeSuccess() throws Exception {
+        Employee employee = getEmployee();
+        String expectedResponse = "Employee added successfully";
+
+        when(employeeService.addEmployee(any(Employee.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(employee)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+    }
+
+    //Create a test case for addEmployeeFailure
+    @Test
+    @DisplayName("AddEmployee_FailureScenario")
+    void addEmployeeFailure() throws Exception {
+        Employee employee = getEmployee();
+        String expectedResponse = "Employee verification failed";
+
+        when(employeeService.addEmployee(any(Employee.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/employee")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(employee)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+    }
+
+    //Create a test case for deleteEmployeeSuccess
+    @Test
+    @DisplayName("DeleteEmployee_SuccessScenario")
+    void deleteEmployeeSuccess() throws Exception {
+        String employeeId = "18789";
+        String expectedResponse = "Employee deleted successfully";
+
+        when(employeeService.deleteEmployee(anyString())).thenReturn(expectedResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/employee/{employeeId}", employeeId))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
     }
 
 

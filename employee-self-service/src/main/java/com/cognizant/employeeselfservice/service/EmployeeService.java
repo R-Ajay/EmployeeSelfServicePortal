@@ -9,17 +9,17 @@ import java.util.List;
  * @author Ajay
  */
 public interface EmployeeService {
-   public List<Employee> getAllEmployee();
+    public List<Employee> getAllEmployee();
 
-   public Employee getEmployeeById(String employeeId);
+    public Employee getEmployeeById(String employeeId);
 
-   public List<Employee> getEmployeeByName(String employeeName);
+    public List<Employee> getEmployeeByName(String employeeName);
 
-   public String addEmployee(Employee employee);
+    public String addEmployee(Employee employee);
 
-   public String updateEmployee(String employeeId, Employee employee);
+    public String updateEmployee(String employeeId, Employee employee);
 
-   public String deleteEmployee(String employeeId);
+    public String deleteEmployee(String employeeId);
 
 
 }

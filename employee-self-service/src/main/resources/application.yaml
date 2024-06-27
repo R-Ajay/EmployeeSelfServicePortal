@@ -1,7 +1,24 @@
 spring:
-   profiles:
-     active: dev
+#   profiles:
+#     active: dev
    application:
       name:
         EMPLOYEE-SELF-SERVICE
+   config:
+     import: optional:configserver:http://localhost:8071
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveliness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
 

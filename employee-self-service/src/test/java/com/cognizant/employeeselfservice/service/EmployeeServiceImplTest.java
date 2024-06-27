@@ -4,19 +4,18 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.cognizant.employeeselfservice.exception.DataNotFoundException;
+import com.cognizant.employeeselfservice.feign.BackgroundVerification;
 import com.cognizant.employeeselfservice.model.Employee;
 import com.cognizant.employeeselfservice.repository.EmployeeRepo;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +31,14 @@ class EmployeeServiceImplTest {
     @InjectMocks
     private EmployeeServiceImpl employeeServiceImpl;
 
+    @Mock
+    private BackgroundVerification backgroundVerification;
+
 
     @Test
     @DisplayName("GetEmployeeById_SuccessScenario")
     void getEmployeeByIdSuccess() {
+
         when(employeeRepo.findByEmployeeId(anyString())).thenReturn(getEmployee());
 
         Employee employee = employeeServiceImpl.getEmployeeById("18789");
@@ -75,6 +78,68 @@ class EmployeeServiceImplTest {
         assertThrows(DataNotFoundException.class, () ->
                       employeeServiceImpl.getEmployeeByName("Ajay R"));
     }
+
+    //create a test case for getAllEmployeeSuccess
+    @Test
+    @DisplayName("GetAllEmployee_SuccessScenario")
+    void getAllEmployeeSuccess() {
+        when(employeeRepo.findAll()).thenReturn(getEmployeeLists());
+
+        List<Employee> employees = employeeServiceImpl.getAllEmployee();
+
+        assertEquals(employees.size(), 2);
+    }
+
+    //create a test case for getAllEmployeeFail
+    @Test
+    @DisplayName("GetAllEmployee_FailScenario")
+    void getAllEmployeeFail() {
+        when(employeeRepo.findAll()).thenReturn(null);
+
+        assertThrows(DataNotFoundException.class, () ->
+                employeeServiceImpl.getAllEmployee());
+    }
+
+    //create a test case for addEmployeeSuccess
+    @Test
+    @DisplayName("AddEmployee_SuccessScenario")
+    void addEmployeeSuccess() {
+        Employee employee = getEmployee();
+        when(employeeRepo.save(any(Employee.class))).thenReturn(employee);
+        when(backgroundVerification.verifyEmployeeBackground(any())).thenReturn(new ResponseEntity<>("Good", HttpStatus.OK));
+        String result = employeeServiceImpl.addEmployee(employee);
+
+         assertTrue(result.contains("successfully added to db"));
+    }
+
+    //create a test case for addEmployeeFail
+    @Test
+    @DisplayName("AddEmployee_FailScenario")
+    void addEmployeeFail() {
+        Employee employee = getEmployee();
+        when(backgroundVerification.verifyEmployeeBackground(any())).thenReturn(new ResponseEntity<>("Bad", HttpStatus.BAD_REQUEST));
+        String result = employeeServiceImpl.addEmployee(employee);
+        assertEquals(result, "Employee verification failed");
+    }
+
+    //Create a test case for deleteEmployeeSuccess
+    @Test
+    @DisplayName("DeleteEmployee_SuccessScenario")
+    void deleteEmployeeSuccess() {
+        when(employeeRepo.findByEmployeeId(anyString())).thenReturn(getEmployee());
+        String result = employeeServiceImpl.deleteEmployee("18789");
+        assertEquals(result, "Given employee : 18789 is successfully removed from db");
+    }
+
+    //create a test case for deleteEmployeeFail
+    @Test
+    @DisplayName("DeleteEmployee_FailScenario")
+    void deleteEmployeeFail() {
+        when(employeeRepo.findByEmployeeId(anyString())).thenReturn(null);
+        assertThrows(DataNotFoundException.class, () ->
+                employeeServiceImpl.deleteEmployee("18123"));
+    }
+
 
     private Employee getEmployee(){
         Employee employee = new Employee();

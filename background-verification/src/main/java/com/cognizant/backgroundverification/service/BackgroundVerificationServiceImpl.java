@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 
-@Service
 public class BackgroundVerificationServiceImpl implements BackgroundVerificationService{
-
-
+    
     @Override
     public String verifyEmployeeBackground(EmployeeVerificationRequest employeeVerificationRequest) {
 

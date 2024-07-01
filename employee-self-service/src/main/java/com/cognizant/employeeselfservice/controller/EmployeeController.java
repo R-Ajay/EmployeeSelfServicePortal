@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class EmployeeController {
 
     @Autowired

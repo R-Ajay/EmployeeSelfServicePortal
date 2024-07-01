@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @RestControllerAdvice
 public class GlobalHandleException extends ResponseEntityExceptionHandler {
@@ -17,7 +18,7 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler {
                                                                         WebRequest webRequest) {
 
         ServiceException serviceException =
-                new ServiceException(new Date(),
+                new ServiceException(LocalDateTime.now(),
                         exception.getErrorMessage(),
                         webRequest.getDescription(false));
 
@@ -26,7 +27,7 @@ public class GlobalHandleException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleExceptionClass(Exception e, WebRequest webRequest) {
-        ServiceException serviceException = new ServiceException(new Date(), e.getMessage(),
+        ServiceException serviceException = new ServiceException(LocalDateTime.now(), e.getMessage(),
                 webRequest.getDescription(false));
         return new ResponseEntity<>(serviceException, HttpStatus.INTERNAL_SERVER_ERROR);
     }

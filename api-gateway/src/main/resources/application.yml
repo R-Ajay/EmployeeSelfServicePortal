@@ -1,8 +1,14 @@
 spring:
   application:
-   name: service-registry
+    name: "api-gateway"
   config:
     import: optional:configserver:http://localhost:8071
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
 
 
 management:
@@ -19,9 +25,16 @@ management:
     health:
       probes:
         enabled: true
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
 
 
 
-
-
-
+info:
+  app:
+    name: "API-GATEWAY"
+    description: "API-GATEWAY for routing"
+    version: "1.0"

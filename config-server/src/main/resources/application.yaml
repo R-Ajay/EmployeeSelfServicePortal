@@ -4,16 +4,17 @@ server:
 spring:
   application:
    name: config-server
-  profiles:
+#  profiles:
 #  active: native
-   active: git
+#   active: git
   cloud:
    config:
     server:
      native:
 #      search-locations: classpath:/config
      git:
-       uri: "github url"
+       uri: https://github.com/R-Ajay/EmployeeSelfServicePortal.git
+       searchPaths: config-properties
        default-label: main
        timeout: 10
        clone-on-start: true

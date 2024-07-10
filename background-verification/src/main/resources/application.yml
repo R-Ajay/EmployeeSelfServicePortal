@@ -1,9 +1,11 @@
 spring:
   application:
-   name: service-registry
+   name: BACKGROUND-VERIFICATION
   config:
     import: optional:configserver:http://localhost:8071
 
+server:
+  port: 8081
 
 management:
   endpoints:
@@ -19,9 +21,19 @@ management:
     health:
       probes:
         enabled: true
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
 
+endpoints:
+  shutdown:
+    enabled: true
 
-
-
-
+info:
+  app:
+    name: "BACKGROUND-VERIFICATION"
+    description: "BACKGROUND VERIFICATION Portal"
+    version: "1.0"
 

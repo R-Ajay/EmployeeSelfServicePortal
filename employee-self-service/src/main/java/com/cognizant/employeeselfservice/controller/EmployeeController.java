@@ -52,26 +52,25 @@ public class EmployeeController {
         if("Employee verification failed".equalsIgnoreCase(result))
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(result ,HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
-
 
 
     @PutMapping(path = "/employee/{employeeId}")
     @Operation(summary = "Update employee by id")
     public ResponseEntity<String> updateEmployee(@PathVariable("employeeId") String employeeId,
-                                                       @RequestBody Employee employee){
+                                                 @RequestBody Employee employee) {
 
         log.info("UpdateEmployee api is called");
-        return new ResponseEntity<>(employeeService.updateEmployee(employeeId ,employee) ,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(employeeService.updateEmployee(employeeId, employee), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/employee/{employeeId}")
     @Operation(summary = "Delete employee by id")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") String employeeId){
+    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") String employeeId) {
 
         log.info("DeleteEmployee api is called");
-        return new ResponseEntity<>(employeeService.deleteEmployee(employeeId) ,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(employeeService.deleteEmployee(employeeId), HttpStatus.ACCEPTED);
     }
 
 }

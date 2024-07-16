@@ -2,12 +2,13 @@ spring:
   application:
     name: "api-gateway"
   config:
-    import: optional:configserver:http://localhost:8071
+    import: optional:configserver:http://localhost:8071 #To get property from config server
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
+          lowerCaseServiceId: true
 
 
 
@@ -15,21 +16,30 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "*" #Enable all the endpoints from actuator
   health:
     readiness-state:
-      enabled: true
+      enabled: true   #Enable readiness status for application
     liveliness-state:
-      enabled: true
+      enabled: true   #Enable liveliness status for application
   endpoint:
     health:
       probes:
-        enabled: true
+        enabled: true #Enable health-related endpoints from actuator
     gateway:
-      enabled: true
+      enabled: true   #Enable gateway-related endpoints from actuator
   info:
     env:
       enabled: true
+
+#CB-->Circuit Breaker
+resilience4j.circuitbreaker:
+  configs:
+    default: #If you want to customize the CB settings for each route. set the CB name in filter(Refer Line 25 in main file). here change the name from default to respective CB name
+      slidingWindowSize: 10 #If its lessthan 10 it will move from closed state to open state
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50 #Failure rate in percentage if its 50%. It will go to open state
+      waitDurationInOpenState: 10000 #Wait time for open state in milliseconds(10s)
 
 
 

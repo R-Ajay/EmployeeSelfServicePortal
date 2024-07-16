@@ -6,6 +6,7 @@ import com.cognizant.employeeselfservice.feign.BackgroundVerification;
 import com.cognizant.employeeselfservice.model.Employee;
 import com.cognizant.employeeselfservice.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -83,9 +84,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 
         ResponseEntity<String> responseEntity = backgroundVerification
                                     .verifyEmployeeBackground(employeeVerificationRequest);
+
         if ("Bad".equalsIgnoreCase(responseEntity.getBody())){
            return "Employee verification failed";
-       }
+       } else if (responseEntity.getStatusCode() == HttpStatusCode.valueOf(500)) {
+            return responseEntity.getBody();
+        }
+
 
         String employeeId = generateEmployeeId();
         employee.setEmployeeId(employeeId);

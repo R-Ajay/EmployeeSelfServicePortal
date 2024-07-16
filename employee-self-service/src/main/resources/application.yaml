@@ -6,6 +6,17 @@ spring:
         EMPLOYEE-SELF-SERVICE
    config:
      import: optional:configserver:http://localhost:8071
+   cloud:
+     openFeign:
+       circuitBreaker:
+         enabled: true
+
+resilience.circuitBreaker:
+  default:
+    slidingWindowSize: 10
+    failureRateThreshold: 50
+    waitDurationInOpenState: 10000
+    permittedNumberOfCallsInHalfOpenState: 2
 
 management:
   endpoints:

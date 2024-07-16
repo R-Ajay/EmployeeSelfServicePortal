@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name= "BACKGROUND-VERIFICATION")
+@FeignClient(name= "BACKGROUND-VERIFICATION",fallback = FallBack.class)
 public interface BackgroundVerification {
 
     @PostMapping(name = "/verify")
